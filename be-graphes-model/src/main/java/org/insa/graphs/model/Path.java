@@ -31,11 +31,40 @@ public class Path {
 	 *                                  consecutive nodes in the list are not
 	 *                                  connected in the graph.
 	 * 
-	 * @deprecated Need to be implemented.
+	
 	 */
 	public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
 		List<Arc> arcs = new ArrayList<Arc>();
-		// TODO:
+		
+		double min;
+		
+		if(nodes.size() == 1) {
+            return new Path(graph, nodes.get(0));
+        }
+		// TODO: On nous donne l'ordre des noeuds à parcourir, il faut tout d'abord (recupérer taille noeudrécupérer tous les arcs successeurs puis choisir le prochain noeud à explorer qui correspond au noeud d'indice i : puis dans ces arcs prendre le plus court
+		for (int i=0; i<nodes.size()-1;i++) {
+			min=Double.MAX_VALUE;
+			Arc o=null;
+			for (Arc ok : nodes.get(i).getSuccessors()) {
+				//parcours tous les arcs successeurs 
+				if (ok.getDestination()== nodes.get(i+1)) {
+					if (o==null) {
+						o = ok;
+					}else if (ok.getMinimumTravelTime()<min) {
+						min =ok.getMinimumTravelTime();//
+						o = ok;
+						
+					}
+				}
+			
+			// test de la list des arcs passant par les noeuds de la liste
+			}
+			// Cas si c'est null on throw IllegalArgumentException
+			if (o==null) {
+				throw new IllegalArgumentException();
+			}
+			arcs.add(o);
+		}
 		return new Path(graph, arcs);
 	}
 
@@ -52,7 +81,7 @@ public class Path {
 	 *                                  consecutive nodes in the list are not
 	 *                                  connected in the graph.
 	 * 
-	 * @deprecated Need to be implemented.
+	
 	 */
 	public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
 		List<Arc> arcs = new ArrayList<Arc>();

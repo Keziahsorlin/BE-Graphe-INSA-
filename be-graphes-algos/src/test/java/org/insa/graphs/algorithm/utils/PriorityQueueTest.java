@@ -247,6 +247,7 @@ public abstract class PriorityQueueTest {
         while (!queue.isEmpty()) {
             MutableInteger min = queue.deleteMin();
             try {
+            	
                 queue.remove(min);
                 fail("Expected exception " + ElementNotFoundException.class.getName());
             }

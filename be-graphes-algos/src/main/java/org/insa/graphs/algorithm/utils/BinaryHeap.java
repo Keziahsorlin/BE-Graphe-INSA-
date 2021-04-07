@@ -137,7 +137,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
     @Override
     public void remove(E x) throws ElementNotFoundException {
-        // TODO: this.array.indexOf(x)<cas particulier Empty | up and down percolate|
+        // TODO: this.array.indexOf(x)<cas particulier Empty | up and down percolate| avec une map la complexité passe à O(1)
     	if (this.isEmpty()){
     		throw new ElementNotFoundException(x);
     	}

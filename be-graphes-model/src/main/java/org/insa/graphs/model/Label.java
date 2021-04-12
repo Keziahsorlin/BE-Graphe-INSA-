@@ -9,7 +9,7 @@ public class Label implements Comparable <Label> {
 	protected boolean marque;
 	protected double cost;
 	private Arc father;
-	
+	@Override
 	public int compareTo(Label other)
 	{
 		return Double.compare(this.cost, other.cost);
@@ -24,6 +24,28 @@ public class Label implements Comparable <Label> {
 
 	public double getCost() {
 		return this.cost;
+	}
+	public boolean getMark() {
+		return this.marque;
+	}
+	public Arc getFather() {
+		return this.father;
+	}
+	public Node getSommet() {
+		return this.sommet;
+	}
+	
+	public void setMark(Boolean bol){
+		this.marque=bol;
+	}
+	public void setCost(Double dob){
+		this.cost=dob;
+	}
+	public void setFather(Arc Father){
+		this.father=Father;
+	}
+	public void setSommet(Node n){
+		this.sommet=n;
 	}
 	//public void set(){}
 }

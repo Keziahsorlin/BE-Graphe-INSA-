@@ -20,18 +20,30 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
+    
+    protected void initialiser(BinaryHeap<Label>  labels, HashMap<Node,Label> hashm) {
+    
+    	Graph g = data.getGraph();
+    	for(Node node : g.getNodes()) { // on parcours les différents node du graphe g
+        	hashm.put(node, new Label(node)); // pour chaque noeud on créé un label associé dans la hashmap
+        }
+    	
+    }
 
     @Override
     protected ShortestPathSolution doRun() {
+    	BinaryHeap<Label> labels = new BinaryHeap<Label>();
+    	HashMap <Node,Label> hashm =  new HashMap<Node,Label>();
         final ShortestPathData data = getInputData();
         ShortestPathSolution solution = null;
-        BinaryHeap<Label> labels = new BinaryHeap<Label>(); //création du tas binaire de labels ( labels )
-        HashMap <Node,Label> hashm = new HashMap<Node,Label>(); // Création de la hashmap (hashm)
+        //BinaryHeap<Label> labels = new BinaryHeap<Label>(); //création du tas binaire de labels ( labels )
+       // HashMap <Node,Label> hashm = new HashMap<Node,Label>(); // Création de la hashmap (hashm)
         Graph g = data.getGraph(); // g prends le graphe des données
         notifyOriginProcessed(data.getOrigin());
-        for(Node node : g.getNodes()) { // on parcours les différents node du graphe g
+        /*for(Node node : g.getNodes()) { // on parcours les différents node du graphe g
         	hashm.put(node, new Label(node)); // pour chaque noeud on créé un label associé dans la hashmap
-        }
+        }*/
+        initialiser(labels,hashm);
         labels.insert(hashm.get(data.getOrigin())); // On insert dans le tas l'origine de notre graphe
         labels.findMin().setCost(0.0);
         Label Petit = null; // création  d'un label (Petit) désignant le plus petit

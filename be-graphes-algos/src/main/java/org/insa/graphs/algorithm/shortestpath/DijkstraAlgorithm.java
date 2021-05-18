@@ -59,13 +59,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 						}else {
 							Cout+=arc.getMinimumTravelTime();
 						}
-                        if (lab.getCost() > Cout){ // Si le cout de ce ch												emin est moindre que celauienregistré auparavant alors : on l'enregistre dans la Heap
+						//System.out.println(lab.getCost());
+						//System.out.println(Cout);
+                        if (lab.getCost() > Cout){ // Si le cout de ce chemin est moindre que celaui enregistré auparavant alors : on l'enregistre dans la Heap
                         	// le nouveau label remplace l'ancien
                         	
                         	lab.setCost(Cout);
                         	lab.setFather(arc);
-                           
-                            if (lab.getFather()==null) { // Si il n'y avait pas d'arc père
+                        	//labels.insert(lab); 
+                          
+                            if (!(lab.getSommet().getSuccessors()==null)) { // Si il n'y avait pas d'arc père
                             	labels.insert(lab); // enregistrement dans la heap 
                             }
                              

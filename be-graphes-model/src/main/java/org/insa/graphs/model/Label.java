@@ -18,7 +18,7 @@ public class Label implements Comparable <Label> {
 	public Label(Node som) {
 		this.sommet=som;
 		this.marque=false;
-		this.cost=1.0/0.0;
+		this.cost=Double.POSITIVE_INFINITY;
 		this.father=null;
 	}
 

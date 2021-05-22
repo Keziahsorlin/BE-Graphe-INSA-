@@ -59,37 +59,41 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	if (Petit.getSommet() == dest) break; // Si notre plus petit est arrivé à destination alors le while se termine
         	 // Le label a été visité
         	for(Arc arc : Petit.getSommet().getSuccessors()) { // pour tous le succeurs du Label observé (Petit) on regarde : si ils ont été marqué, 
-        		notifyNodeReached(arc.getDestination());	
-        		if (!hashm.get(arc.getDestination()).getMark()){// get key label marque (Marqué ou non ? ) si non :
-                		
-        				Node node = arc.getDestination(); // on recupère leur destination 
-                		Label lab = hashm.get(node); // lab  prends le label associé à node (destination)
-                        double Cout = Petit.getCost(); // on recupère le Cout  de passage dans l'arc et le cout pour arriver jusqu'à PETIT
-                       	
-						if (mode == AbstractInputData.Mode.LENGTH) {
-							Cout+=arc.getLength(); 
-						}else {
-							Cout+=arc.getMinimumTravelTime();
-						}
-						//System.out.println(lab.getCost());
-						//System.out.println(Cout);
-                        if (lab.getCost() > Cout){ // Si le cout de ce chemin est moindre que celaui enregistré auparavant alors : on l'enregistre dans la Heap
-                        	// le nouveau label remplace l'ancien
-                        	
-                        	lab.setCost(Cout);
-                        	lab.setFather(arc);
-                        	//labels.insert(lab); 
-                          
-                            if (!(lab.getSommet().getSuccessors()==null)) { // Si il n'y avait pas d'arc père
-                            	labels.insert(lab); // enregistrement dans la heap 
-                            }
-                             
-                            
-                            // Si ma destination a un parent alors je l'enlève de la heap à ajouter
-                            
-                            // remove du labels
-                        }
-                	 }
+        		notifyNodeReached(arc.getDestination());
+        		if (data.isAllowed(arc)) {
+        			
+        		
+	        		if (!hashm.get(arc.getDestination()).getMark()){// get key label marque (Marqué ou non ? ) si non :
+	                		
+	        				Node node = arc.getDestination(); // on recupère leur destination 
+	                		Label lab = hashm.get(node); // lab  prends le label associé à node (destination)
+	                        double Cout = Petit.getCost(); // on recupère le Cout  de passage dans l'arc et le cout pour arriver jusqu'à PETIT
+	                       	
+							if (mode == AbstractInputData.Mode.LENGTH) {
+								Cout+=arc.getLength(); 
+							}else {
+								Cout+=arc.getMinimumTravelTime();
+							}
+							//System.out.println(lab.getCost());
+							//System.out.println(Cout);
+	                        if (lab.getCost() > Cout){ // Si le cout de ce chemin est moindre que celaui enregistré auparavant alors : on l'enregistre dans la Heap
+	                        	// le nouveau label remplace l'ancien
+	                        	
+	                        	lab.setCost(Cout);
+	                        	lab.setFather(arc);
+	                        	//labels.insert(lab); 
+	                          
+	                            if (!(lab.getSommet().getSuccessors()==null)) { // Si il n'y avait pas d'arc père
+	                            	labels.insert(lab); // enregistrement dans la heap 
+	                            }
+	                             
+	                            
+	                            // Si ma destination a un parent alors je l'enlève de la heap à ajouter
+	                            
+	                            // remove du labels
+	                        }
+	                	 }
+        			}
         	}
         }
         // gérer le cas ou il n'y a pas de plus court chemin :si (pas de marquage sur le label de Dest alors Inf 

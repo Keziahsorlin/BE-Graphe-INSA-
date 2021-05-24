@@ -85,11 +85,13 @@ public class DijkstrastraAlgorithmTest {
 	@Test
 	public 	void testValidePath() throws IOException{
 		//test sur chemin origine = arrivee
+		// Sur chaque mode 
 		for (int i=0 ; i <4; i++) {
-			assertFalse((Soluce(graphe, i ,dijk , 0, 0).isFeasible()));
-			assertTrue((Soluce(graphe, i ,dijk , 0, 359997)).getPath().isValid());
-			assertTrue((Soluce(graphe, i ,dijk , 85921, 359997)).getPath().isValid());
-			
+			assertFalse((Soluce(graphe, i ,dijk , 0, 0).isFeasible())); // le chemin A > A ne doit rien donner donc non réalisable
+			assertTrue((Soluce(graphe, i ,dijk , 0, 359997)).getPath().isValid()); // Dijkstra Un test sur un court un chemin pour voir si le chemin créé est correct
+			assertTrue((Soluce(graphe, i ,astr , 0, 359997)).getPath().isValid()); // la même en astar
+			assertTrue((Soluce(graphe, i ,dijk , 85921, 359997)).getPath().isValid()); // Plus gros chemin test du chemin créé
+			//test correct
 		}
 	
 	}
@@ -98,10 +100,10 @@ public class DijkstrastraAlgorithmTest {
 	public void testIsFeasible() {
 	   for (int i=0 ; i <4; i++) {
     	// courte
-    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 0, 359997).getStatus());
-    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,astr, 0, 359997).getStatus());
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 0, 359997).getStatus()); // voir si les chemins donnés sont optimaux
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,astr, 0, 359997).getStatus());// la même en astar
     	// + long
-    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 285, 300).getStatus());
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 285, 300).getStatus()); // sur un plus gros chemin test d'optimalité
 	   }
     }
 	   
@@ -117,11 +119,12 @@ public class DijkstrastraAlgorithmTest {
 		//////// Comparaison entre les Algos 
 		//distance
 		
-		
+		//Comparer Bellman avec le dijkstra et astra sur le même chemin et voir si l'on retourne la même longueur
 		assertEquals((int)((Soluce(graphe, 1 ,bell, 285, 300).getPath().getLength())), (int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getLength())));
 		assertEquals((int)((Soluce(graphe, 1 ,astr, 285, 300).getPath().getLength())), (int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getLength())));
 		//Avec chaque mode Comp
 		for (int i=0; i<4;i++) {
+			//Comparer Bellman avec le dijkstra et astra sur le même chemin et voir si l'on retourne la même longueur + temps quelque soit le mode
 			ShortestPathSolution SolutionBell = Soluce(graphe2, i ,bell, 6619, 2137);
 			ShortestPathSolution SolutionDijk= Soluce(graphe2, i ,dijk, 6619, 2137);
 			ShortestPathSolution SolutionAstr = Soluce(graphe2, i ,astr, 6619, 2137);
@@ -131,12 +134,13 @@ public class DijkstrastraAlgorithmTest {
 			
 			assertEquals(((int)((SolutionAstr.getPath().getMinimumTravelTime()))),((int)((SolutionBell .getPath().getMinimumTravelTime()))));
 			assertEquals(((int)((SolutionBell .getPath().getMinimumTravelTime()))),((int)((SolutionDijk.getPath().getMinimumTravelTime()))));
-			
+			// les algorithmes donnent l'optimal donc les mêmes chemins impliquent les mêmes solutions
+			// resultat correct
 		}
-		//Temps
+		//Temps sur une plus grosse carte
 		assertEquals((int)((Soluce(graphe, 3 ,bell, 285, 300).getPath().getMinimumTravelTime())), (int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getMinimumTravelTime())));
 		assertEquals((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getMinimumTravelTime())), (int)((Soluce(graphe, 3 ,bell, 285, 300).getPath().getMinimumTravelTime())));
-		
+		// LE résultat en temps est donné correct
 		
 		/*reader.close();
 		reader2.close();
@@ -151,20 +155,32 @@ public class DijkstrastraAlgorithmTest {
 		// Temps fastest inf à shortest 
 		
 		assertTrue(((int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getMinimumTravelTime()))) <= ((int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getMinimumTravelTime()))));
+		// resultat correct
 		
 		// et distance shortest  inf  fastest 
 		assertTrue(((int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getLength()))) <= ((int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getLength()))));
+		// resultat correct
 		
 		// Distance A -> C <= A ->B ->C Inégalité triangulaire
 		
 		assertTrue((((int)((Soluce(graphe, 1 ,dijk, 89082, 34751).getPath().getLength()))) + (int)((Soluce(graphe, 1 ,dijk, 34751, 128846).getPath().getLength()))) >= ((int)((Soluce(graphe, 1 ,dijk, 89082, 128846).getPath().getLength()))));
 		
 		assertTrue((((int)((Soluce(graphe2, 1 ,dijk, 6619, 6169).getPath().getLength()))) + (int)((Soluce(graphe2, 1 ,dijk, 6169, 21376).getPath().getLength()))) >= ((int)((Soluce(graphe2, 1 ,dijk, 6619, 21376).getPath().getLength()))));
+		// resultat correct
+		
 		// Test Temps A  -> C <= A ->B ->C Optimalité
 		assertTrue((((int)((Soluce(graphe2, 1 ,dijk, 6619, 6169).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe2, 1 ,dijk, 6169, 21376).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe2, 1 ,dijk, 6619, 21376).getPath().getMinimumTravelTime()))));
+		// resultat correct
+		for (int i=0;i<4;i++) {
+			//Inegalité triangulaire tout mode
+			assertTrue((((int)((Soluce(graphe3, i ,dijk, 2, 1).getPath().getLength()))) + (int)((Soluce(graphe3, i ,dijk, 1, 11).getPath().getLength()))) >= ((int)((Soluce(graphe3, i ,dijk, 2, 11).getPath().getLength()))));
+			// Temps A ->C Tout mode
+			assertTrue((((int)((Soluce(graphe3, i ,dijk, 2, 1).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe3, i ,dijk, 1, 11).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe3, i ,dijk, 2, 11).getPath().getMinimumTravelTime()))));
+			
+		}
+		// resultat correct
 		
-		
-		////////////////ASTRA
+		////////////////ASTRA // resultat correct (Les mêmes que dijkstra)
 		// Temps fastest inf à shortest 
 		
 		assertTrue(((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getMinimumTravelTime()))) <= ((int)((Soluce(graphe, 1 ,astr, 285, 300).getPath().getMinimumTravelTime()))));

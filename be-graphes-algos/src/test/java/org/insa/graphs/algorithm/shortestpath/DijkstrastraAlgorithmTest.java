@@ -33,11 +33,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class DijkstrastraAlgorithmTest {
-	//rajouter une classe initaliser pour définir un run en a* ou dijkstra
-	private static Graph graphe,graphe2;
-	private static List NoeudRand ;
+	private static Graph graphe,graphe2,graphe3;
+	//private static List NoeudRand ;
 	static String dijk= "dijkstra";
 	String astr= "astra";
 	String bell = "Bellman";
@@ -51,6 +50,8 @@ public class DijkstrastraAlgorithmTest {
 		graphe = reader.read();
 		GraphReader reader2 = new BinaryGraphReader(new DataInputStream(new BufferedInputStream(new FileInputStream("/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/toulouse.mapgr/"))));
 		graphe2 = reader2.read();
+		GraphReader reader3 = new BinaryGraphReader(new DataInputStream(new BufferedInputStream(new FileInputStream("/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/carre.mapgr/"))));
+		graphe3 = reader3.read();
 		//ArrayList<Node> 
 		
 			
@@ -85,7 +86,7 @@ public class DijkstrastraAlgorithmTest {
 	public 	void testValidePath() throws IOException{
 		//test sur chemin origine = arrivee
 		for (int i=0 ; i <4; i++) {
-			assertTrue((Soluce(graphe, i ,dijk , 0, 0)).getPath().isValid());
+			assertFalse((Soluce(graphe, i ,dijk , 0, 0).isFeasible()));
 			assertTrue((Soluce(graphe, i ,dijk , 0, 359997)).getPath().isValid());
 			assertTrue((Soluce(graphe, i ,dijk , 85921, 359997)).getPath().isValid());
 			
@@ -93,32 +94,60 @@ public class DijkstrastraAlgorithmTest {
 	
 	}
 	// tous les modes sont testés
-	   @Test
-	    public void testIsFeasible() {
-		   for (int i=0 ; i <4; i++) {
-	    	// courte
-	    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 0, 359997).getStatus());
-	    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,astr, 0, 359997).getStatus());
-	    	// + long
-	    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 285, 300).getStatus());
-		   }
-	    }
+	@Test
+	public void testIsFeasible() {
+	   for (int i=0 ; i <4; i++) {
+    	// courte
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 0, 359997).getStatus());
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,astr, 0, 359997).getStatus());
+    	// + long
+    	assertEquals(Status.OPTIMAL, Soluce(graphe, i ,dijk, 285, 300).getStatus());
+	   }
+    }
 	   
 	@Test
-	public 	void testOracle() throws IOException{
+	public void testOracle() throws IOException{
 		// on arrondi la distance en m 
 		// le resultat Bellman et dijkstra est le même et astra dijkstra
-		
-		
+		//test vide chemin origin = depart, test 
+				// test Lorsque Voiture sur un chemin non alloué pour les voitures
+				// temps distance
+				// regarder si short est vraiment shorter que fast
+				// de même fast est plus long en taille que short
+		//////// Comparaison entre les Algos 
 		//distance
 		
 		
 		assertEquals((int)((Soluce(graphe, 1 ,bell, 285, 300).getPath().getLength())), (int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getLength())));
 		assertEquals((int)((Soluce(graphe, 1 ,astr, 285, 300).getPath().getLength())), (int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getLength())));
-		
+		//Avec chaque mode Comp
+		for (int i=0; i<4;i++) {
+			ShortestPathSolution SolutionBell = Soluce(graphe2, i ,bell, 6619, 2137);
+			ShortestPathSolution SolutionDijk= Soluce(graphe2, i ,dijk, 6619, 2137);
+			ShortestPathSolution SolutionAstr = Soluce(graphe2, i ,astr, 6619, 2137);
+			assertEquals(((int)((SolutionAstr.getPath().getLength()))),((int)((SolutionBell .getPath().getLength()))));
+			assertEquals(((int)((SolutionBell .getPath().getLength()))),((int)((SolutionDijk.getPath().getLength()))));
+			//temps
+			
+			assertEquals(((int)((SolutionAstr.getPath().getMinimumTravelTime()))),((int)((SolutionBell .getPath().getMinimumTravelTime()))));
+			assertEquals(((int)((SolutionBell .getPath().getMinimumTravelTime()))),((int)((SolutionDijk.getPath().getMinimumTravelTime()))));
+			
+		}
 		//Temps
 		assertEquals((int)((Soluce(graphe, 3 ,bell, 285, 300).getPath().getMinimumTravelTime())), (int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getMinimumTravelTime())));
-		assertEquals((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getMinimumTravelTime())), (int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getMinimumTravelTime())));
+		assertEquals((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getMinimumTravelTime())), (int)((Soluce(graphe, 3 ,bell, 285, 300).getPath().getMinimumTravelTime())));
+		
+		
+		/*reader.close();
+		reader2.close();
+		*/
+	}
+	 
+	@Test
+	public 	void testsansOracle() throws IOException{
+	
+		////////////////DIJKSTRA
+				
 		// Temps fastest inf à shortest 
 		
 		assertTrue(((int)((Soluce(graphe, 3 ,dijk, 285, 300).getPath().getMinimumTravelTime()))) <= ((int)((Soluce(graphe, 1 ,dijk, 285, 300).getPath().getMinimumTravelTime()))));
@@ -130,37 +159,38 @@ public class DijkstrastraAlgorithmTest {
 		
 		assertTrue((((int)((Soluce(graphe, 1 ,dijk, 89082, 34751).getPath().getLength()))) + (int)((Soluce(graphe, 1 ,dijk, 34751, 128846).getPath().getLength()))) >= ((int)((Soluce(graphe, 1 ,dijk, 89082, 128846).getPath().getLength()))));
 		
+		assertTrue((((int)((Soluce(graphe2, 1 ,dijk, 6619, 6169).getPath().getLength()))) + (int)((Soluce(graphe2, 1 ,dijk, 6169, 21376).getPath().getLength()))) >= ((int)((Soluce(graphe2, 1 ,dijk, 6619, 21376).getPath().getLength()))));
+		// Test Temps A  -> C <= A ->B ->C Optimalité
+		assertTrue((((int)((Soluce(graphe2, 1 ,dijk, 6619, 6169).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe2, 1 ,dijk, 6169, 21376).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe2, 1 ,dijk, 6619, 21376).getPath().getMinimumTravelTime()))));
 		
-	}
-	   
-	@Test
-	public 	void testsansOracle() throws IOException{
-		ArrayList<ShortestPathSolution> array = new ArrayList<ShortestPathSolution>();
+		
+		////////////////ASTRA
+		// Temps fastest inf à shortest 
+		
+		assertTrue(((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getMinimumTravelTime()))) <= ((int)((Soluce(graphe, 1 ,astr, 285, 300).getPath().getMinimumTravelTime()))));
+		
+		// et distance shortest  inf  fastest 
+		assertTrue(((int)((Soluce(graphe, 1 ,astr, 285, 300).getPath().getLength()))) <= ((int)((Soluce(graphe, 3 ,astr, 285, 300).getPath().getLength()))));
+		
+		// Distance A -> C <= A ->B ->C Inégalité triangulaire
+		
+		assertTrue((((int)((Soluce(graphe, 1 ,astr, 89082, 34751).getPath().getLength()))) + (int)((Soluce(graphe, 1 ,astr, 34751, 128846).getPath().getLength()))) >= ((int)((Soluce(graphe, 1 ,astr, 89082, 128846).getPath().getLength()))));
+		
+		assertTrue((((int)((Soluce(graphe2, 1 ,astr, 6619, 6169).getPath().getLength()))) + (int)((Soluce(graphe2, 1 ,astr, 6169, 21376).getPath().getLength()))) >= ((int)((Soluce(graphe2, 1 ,astr, 6619, 21376).getPath().getLength()))));
+		for (int i=0;i<4;i++) {
+			//Inegalité triangulaire tout mode
+			assertTrue((((int)((Soluce(graphe3, i ,astr, 2, 1).getPath().getLength()))) + (int)((Soluce(graphe3, i ,astr, 1, 11).getPath().getLength()))) >= ((int)((Soluce(graphe3, i ,astr, 2, 11).getPath().getLength()))));
+			// Temps A ->C Tout mode
+			assertTrue((((int)((Soluce(graphe3, i ,astr, 2, 1).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe3, i ,astr, 1, 11).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe3, i ,astr, 2, 11).getPath().getMinimumTravelTime()))));
+			
+		}
+		
+		// Test Temps A  -> C <= A ->B ->C Optimalité
+		assertTrue((((int)((Soluce(graphe2, 1 ,astr, 6619, 6169).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe2, 1 ,astr, 6169, 21376).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe2, 1 ,astr, 6619, 21376).getPath().getMinimumTravelTime()))));
+		
 			
 	}
-	@Test
-	public 	void testDoRun() throws IOException{
-		
-		//test vide chemin origin = depart, test 
-		// test Lorsque Voiture sur un chemin non alloué pour les voitures
-		// temps distance
-		// regarder si short est vraiment shorter que fast
-		// de même fast est plus long en taille que short
-		//randomiser des noeuds tq on test une grande possibilité de chemin pour j test
-		
-		
-		/*
-		for(int i=0, i<j,i++) {
-			List 
-		}*/
-	}
-	// Test 
-	public void Oracle() throws IOException{
-		
-	}
-    
-     
-    
+	
 }
 
 

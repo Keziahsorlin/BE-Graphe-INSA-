@@ -51,6 +51,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         AbstractInputData.Mode mode = data.getMode();
         Node depart = data.getOrigin(); // Noeud de départ
         Node dest = data.getDestination(); // noeud de fin
+		if (depart== dest) {
+        	ArrayList<Arc> zero = new ArrayList<Arc>();
+        	return new ShortestPathSolution(data, AbstractSolution.Status.OPTIMAL, new Path(g, zero));
+        }
         while (!labels.isEmpty()) { // tant que le tas n'est pas vide on continue 
         	Petit = labels.deleteMin(); // le plus petit label est remove et donné à Petit
         	Petit.setMark(true);
@@ -68,12 +72,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	        				Node node = arc.getDestination(); // on recupère leur destination 
 	                		Label lab = hashm.get(node); // lab  prends le label associé à node (destination)
 	                        double Cout = Petit.getCost(); // on recupère le Cout  de passage dans l'arc et le cout pour arriver jusqu'à PETIT
-	                       	
-							if (mode == AbstractInputData.Mode.LENGTH) {
-								Cout+=arc.getLength(); 
-							}else {
-								Cout+=arc.getMinimumTravelTime();
-							}
+	                       	Cout+=Evaluateur(arc,mode);
+							
 							//System.out.println(lab.getCost());
 							//System.out.println(Cout);
 	                        if (lab.getCost() > Cout){ // Si le cout de ce chemin est moindre que celaui enregistré auparavant alors : on l'enregistre dans la Heap
@@ -121,5 +121,15 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         return solution;
         
     }
+
+	public double Evaluateur(Arc arc,AbstractInputData.Mode mode){
+		double Cout=0;
+		if (mode == AbstractInputData.Mode.LENGTH) {
+			Cout=arc.getLength(); 
+		}else {
+			Cout=arc.getMinimumTravelTime();
+		}
+		return Cout;
+	} 
 
 }

@@ -63,7 +63,7 @@ public class VelostarAlgorithm extends DijkstraAlgorithm {
 		} else if ((type == RoadType.TERTIARY) ){
 			coef= 4;//moins dangereux
 		}	else if ((type == RoadType.UNCLASSIFIED)|| (type == RoadType.SERVICE)  ){
-			coef= 8;//parfois entre deux route primaire reste dangereux
+			coef= 6;//parfois entre deux route primaire reste dangereux
 		}else if ((type == RoadType.RESIDENTIAL) || (type == RoadType.LIVING_STREET)||  (type == RoadType.ROUNDABOUT) ){
 			coef= 3;//moins dangereux
 		}else if ((type == RoadType.TRACK) ){

@@ -87,7 +87,7 @@ public class DijkstrastraAlgorithmTest {
 		//test sur chemin origine = arrivee
 		// Sur chaque mode 
 		for (int i=0 ; i <4; i++) {
-			assertFalse((Soluce(graphe, i ,dijk , 0, 0).isFeasible())); // le chemin A > A ne doit rien donner donc non réalisable
+			assertTrue((Soluce(graphe, i ,dijk , 0, 0).getPath().isValid())); // le chemin A > A ne doit rien donner donc non réalisable
 			assertTrue((Soluce(graphe, i ,dijk , 0, 359997)).getPath().isValid()); // Dijkstra Un test sur un court un chemin pour voir si le chemin créé est correct
 			assertTrue((Soluce(graphe, i ,astr , 0, 359997)).getPath().isValid()); // la même en astar
 			assertTrue((Soluce(graphe, i ,dijk , 85921, 359997)).getPath().isValid()); // Plus gros chemin test du chemin créé

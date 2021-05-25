@@ -16,8 +16,19 @@ public class LabelStar extends Label {
 	@Override
 	public int compareTo(Label other)
 	{
-		//Cast évite l'implementation de getTotalCost sur Label
-		return Double.compare(this.getTotalCost(), ((LabelStar)other).getTotalCost());
+		if(other instanceof LabelStar) {
+			if (Double.compare(this.getTotalCost(), ((LabelStar)other).getTotalCost())==0) {
+				return Double.compare(this.getDestCost(), ((LabelStar)other).getDestCost());
+			}else {
+				return Double.compare(this.getTotalCost(), ((LabelStar)other).getTotalCost());
+			}
+			//Cast évite l'implementation de getTotalCost sur Label
+			
+				
+		}else {
+			return super.compareTo(other);
+			
+		}
 		
 	}
 	//data

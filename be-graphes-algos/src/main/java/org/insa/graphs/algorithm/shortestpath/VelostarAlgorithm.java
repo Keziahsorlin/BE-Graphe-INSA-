@@ -44,7 +44,7 @@ public class VelostarAlgorithm extends DijkstraAlgorithm {
     	
     }
 	@Override	
-	public double Evaluateur(Arc arc,AbstractInputData.Mode mode){
+	public double Evaluateur(Arc arc){
 		double Cout=0;
 		int coef = 2;
 		RoadType type = arc.getRoadInformation().getType();
@@ -71,11 +71,10 @@ public class VelostarAlgorithm extends DijkstraAlgorithm {
 		}else{
 			coef = 100000; // c'est dangereux est à éviter (il reste les liens entre autoroute etc..)
 		}  
-		if (mode == AbstractInputData.Mode.LENGTH) {
-			Cout=arc.getLength()*(double)(coef); 
-		}else {
-			Cout=arc.getMinimumTravelTime()*(double)(coef);
-		}
+		
+		Cout=data.getCost(arc)*(double)(coef); 
+		
+		
 		return Cout;
 	} 
 }

@@ -206,6 +206,30 @@ public class DijkstrastraAlgorithmTest {
 		
 			
 	}
+	@Test
+	public 	void testPedestriansansOracle() throws IOException{
+		assertTrue((((int)((Soluce(graphe3, 4 ,dijk, 2, 1).getPath().getLength()))) + (int)((Soluce(graphe3,4,dijk, 1, 11).getPath().getLength()))) >= ((int)((Soluce(graphe3,4,dijk, 2, 11).getPath().getLength()))));
+		// Temps A ->C Tout mode
+		assertTrue((((int)((Soluce(graphe3,4,dijk, 2, 1).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe3,4,dijk, 1, 11).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe3,4,dijk, 2, 11).getPath().getMinimumTravelTime()))));
+		assertTrue((((int)((Soluce(graphe3,4,astr, 2, 1).getPath().getLength()))) + (int)((Soluce(graphe3,4,astr, 1, 11).getPath().getLength()))) >= ((int)((Soluce(graphe3,4,astr, 2, 11).getPath().getLength()))));
+		// Temps A ->C Tout mode
+		assertTrue((((int)((Soluce(graphe3,4,astr, 2, 1).getPath().getMinimumTravelTime()))) + (int)((Soluce(graphe3,4,astr, 1, 11).getPath().getMinimumTravelTime()))) >= ((int)((Soluce(graphe3,4,astr, 2, 11).getPath().getMinimumTravelTime()))));
+		
+	}
+	@Test
+	public void testPedestrianOracle() throws IOException{
+		//Comparer Bellman avec le dijkstra et astra sur le même chemin et voir si l'on retourne la même longueur + temps quelque soit le mode
+		
+		ShortestPathSolution SolutionBell = Soluce(graphe2,4,bell, 6619, 2137);
+		ShortestPathSolution SolutionDijk= Soluce(graphe2,4,dijk, 6619, 2137);
+		ShortestPathSolution SolutionAstr = Soluce(graphe2,4,astr, 6619, 2137);
+		assertEquals(((int)((SolutionAstr.getPath().getLength()))),((int)((SolutionBell .getPath().getLength()))));
+		assertEquals(((int)((SolutionBell .getPath().getLength()))),((int)((SolutionDijk.getPath().getLength()))));
+		//temps
+		
+		assertEquals(((int)((SolutionAstr.getPath().getMinimumTravelTime()))),((int)((SolutionBell .getPath().getMinimumTravelTime()))));
+		assertEquals(((int)((SolutionBell .getPath().getMinimumTravelTime()))),((int)((SolutionDijk.getPath().getMinimumTravelTime()))));
+	}
 	
 }
 

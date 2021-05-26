@@ -72,7 +72,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	        				Node node = arc.getDestination(); // on recupère leur destination 
 	                		Label lab = hashm.get(node); // lab  prends le label associé à node (destination)
 	                        double Cout = Petit.getCost(); // on recupère le Cout  de passage dans l'arc et le cout pour arriver jusqu'à PETIT
-	                       	Cout+=Evaluateur(arc,mode);
+	                       	Cout+=Evaluateur(arc);
 							
 							//System.out.println(lab.getCost());
 							//System.out.println(Cout);
@@ -122,14 +122,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
     }
 
-	public double Evaluateur(Arc arc,AbstractInputData.Mode mode){
-		double Cout=0;
-		if (mode == AbstractInputData.Mode.LENGTH) {
-			Cout=arc.getLength(); 
-		}else {
-			Cout=arc.getMinimumTravelTime();
-		}
-		return Cout;
+	public double Evaluateur(Arc arc){
+		
+		
+		return data.getCost(arc);
 	} 
 
 }
